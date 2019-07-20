@@ -14,7 +14,7 @@ import (
 // en: Mounts an http server and must be mounted within a go runtime
 //
 // Example: go func(config Project){ NewServer( ... ) }(config...)
-func NewServer(config Project) (error, *http.ServeMux) {
+func NewServer(config Project) error {
 	var err error
 
 	server := http.NewServeMux()
@@ -23,7 +23,7 @@ func NewServer(config Project) (error, *http.ServeMux) {
 
 		if _, err = os.Stat(staticPath.FilePath); os.IsNotExist(err) {
 			err = errors.New("static dir error: " + err.Error())
-			return err, nil
+			return err
 		}
 
 		server.Handle("/"+staticPath.ServerPath+"/", http.StripPrefix("/"+staticPath.ServerPath+"/", http.FileServer(http.Dir(staticPath.FilePath))))
@@ -42,15 +42,12 @@ func NewServer(config Project) (error, *http.ServeMux) {
 	}
 
 	if err = configCertificates(config.Sll, newServer); err != nil {
-		return err, nil
+		return err
 	}
 
 	if config.Sll.Certificate != "" && config.Sll.CertificateKey != "" {
-		log.Fatal(newServer.ListenAndServeTLS(config.Sll.Certificate, config.Sll.CertificateKey))
-	} else {
-		log.Fatal(newServer.ListenAndServe())
+		return newServer.ListenAndServeTLS(config.Sll.Certificate, config.Sll.CertificateKey)
 	}
 
-	return nil, server
-
+	return newServer.ListenAndServe()
 }
