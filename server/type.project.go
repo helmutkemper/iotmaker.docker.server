@@ -10,15 +10,15 @@ import (
 )
 
 type Project struct {
-	ListenAndServer   ListenAndServer `json:"listenAndServer"`
-	Sll               ssl             `json:"ssl"`
-	Protocol          string          `json:"protocol"`
-	Pygocentrus       pygocentrus     `json:"pygocentrus"`
-	Proxy             []proxy         `json:"proxy"`
-	Static            []static        `json:"static"`
-	DebugServerEnable bool            `json:"debugServerEnable"`
-	Listen            Listen          `json:"-"`
-	waitGroup         sync.WaitGroup  `json:"-"`
+	ListenAndServer ListenAndServer `json:"listenAndServer"`
+	Sll             ssl             `json:"ssl"`
+	//Protocol          string          `json:"protocol"`
+	//Pygocentrus       pygocentrus     `json:"pygocentrus"`
+	Proxy             []proxy        `json:"proxy"`
+	Static            []static       `json:"static"`
+	DebugServerEnable bool           `json:"debugServerEnable"`
+	Listen            Listen         `json:"-"`
+	waitGroup         sync.WaitGroup `json:"-"`
 }
 
 func (el *Project) WaitAddDelta() {
