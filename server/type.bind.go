@@ -1,6 +1,6 @@
 package server
 
 type bind struct {
-	Host       string `yaml:"host"`
-	IgnorePort bool   `yaml:"ignorePort"`
+	Host       string `json:"host"`
+	IgnorePort bool   `json:"ignorePort"`
 }

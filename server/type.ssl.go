@@ -1,12 +1,12 @@
 package server
 
 type ssl struct {
-	Enabled                  bool        `yaml:"enabled"`
-	Certificate              string      `yaml:"certificate"`
-	CertificateKey           string      `yaml:"certificateKey"`
-	Version                  sslVersion  `yaml:"version"`
-	CurvePreferences         interface{} `yaml:"curvePreferences"`
-	PreferServerCipherSuites bool        `yaml:"preferServerCipherSuites"`
-	CipherSuites             interface{} `yaml:"cipherSuites"`
-	X509                     sslX509     `yaml:"x509"`
+	Enabled                  bool        `json:"enabled"`
+	Certificate              string      `json:"certificate"`
+	CertificateKey           string      `json:"certificateKey"`
+	Version                  sslVersion  `json:"version"`
+	CurvePreferences         interface{} `json:"curvePreferences"`
+	PreferServerCipherSuites bool        `json:"preferServerCipherSuites"`
+	CipherSuites             interface{} `json:"cipherSuites"`
+	X509                     sslX509     `json:"x509"`
 }

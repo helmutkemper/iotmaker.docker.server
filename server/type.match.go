@@ -1,7 +1,7 @@
 package server
 
 type match struct {
-	Status []status `yaml:"status"`
-	Header []header `yaml:"header"`
-	Body   []string `yaml:"body"`
+	Status []status `json:"status"`
+	Header []header `json:"header"`
+	Body   []string `json:"body"`
 }

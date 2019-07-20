@@ -1,7 +1,7 @@
 package server
 
 type rateMaxMin struct {
-	Rate float64 `yaml:"rate"`
-	Min  int     `yaml:"min"`
-	Max  int     `yaml:"max"`
+	Rate float64 `json:"rate"`
+	Min  int     `json:"min"`
+	Max  int     `json:"max"`
 }

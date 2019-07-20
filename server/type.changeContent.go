@@ -7,11 +7,11 @@ import (
 )
 
 type changeContent struct {
-	ChangeRateMin  float64 `yaml:"changeRateMin"`
-	ChangeRateMax  float64 `yaml:"changeRateMax"`
-	ChangeBytesMin int     `yaml:"changeBytesMin"`
-	ChangeBytesMax int     `yaml:"changeBytesMax"`
-	Rate           float64 `yaml:"rate"`
+	ChangeRateMin  float64 `json:"changeRateMin"`
+	ChangeRateMax  float64 `json:"changeRateMax"`
+	ChangeBytesMin int     `json:"changeBytesMin"`
+	ChangeBytesMax int     `json:"changeBytesMax"`
+	Rate           float64 `json:"rate"`
 }
 
 func (el *changeContent) prepare() error {

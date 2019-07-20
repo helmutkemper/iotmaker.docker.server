@@ -1,6 +1,6 @@
 package server
 
 type maxMin struct {
-	Min int `yaml:"min"`
-	Max int `yaml:"max"`
+	Min int `json:"min"`
+	Max int `json:"max"`
 }

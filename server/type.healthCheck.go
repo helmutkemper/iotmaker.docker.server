@@ -1,11 +1,11 @@
 package server
 
 type healthCheck struct {
-	Enabled         bool  `yaml:"enabled"`
-	Interval        int   `yaml:"interval"`
-	Fails           int   `yaml:"fails"`
-	Passes          int   `yaml:"passes"`
-	Uri             int   `yaml:"rui"`
-	SuspendInterval int   `yaml:"suspendInterval"`
-	Match           match `yaml:"match"`
+	Enabled         bool  `json:"enabled"`
+	Interval        int   `json:"interval"`
+	Fails           int   `json:"fails"`
+	Passes          int   `json:"passes"`
+	Uri             int   `json:"rui"`
+	SuspendInterval int   `json:"suspendInterval"`
+	Match           match `json:"match"`
 }

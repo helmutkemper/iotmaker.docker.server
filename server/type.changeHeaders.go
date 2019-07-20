@@ -1,7 +1,7 @@
 package server
 
 type changeHeaders struct {
-	Number int      `yaml:"number"`
-	Header []header `yaml:"header"`
-	Rate   float64  `yaml:"rate"`
+	Number int      `json:"number"`
+	Header []header `json:"header"`
+	Rate   float64  `json:"rate"`
 }

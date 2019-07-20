@@ -1,14 +1,14 @@
 package server
 
 type pygocentrus struct {
-	Enabled          bool            `yaml:"enabled"`
-	Delay            rateMaxMin      `yaml:"delay"`
-	DontRespond      rateMaxMin      `yaml:"dontRespond"`
-	ChangeLength     float64         `yaml:"changeLength"`
-	ChangeContent    changeContent   `yaml:"changeContent"`
-	DeleteContent    float64         `yaml:"deleteContent"`
-	ChangeHeaders    []changeHeaders `yaml:"changeHeaders"`
-	successfulAttack bool            `yaml:"-"`
+	Enabled          bool            `json:"enabled"`
+	Delay            rateMaxMin      `json:"delay"`
+	DontRespond      rateMaxMin      `json:"dontRespond"`
+	ChangeLength     float64         `json:"changeLength"`
+	ChangeContent    changeContent   `json:"changeContent"`
+	DeleteContent    float64         `json:"deleteContent"`
+	ChangeHeaders    []changeHeaders `json:"changeHeaders"`
+	successfulAttack bool            `json:"-"`
 }
 
 func (el *pygocentrus) SetAttack() {
