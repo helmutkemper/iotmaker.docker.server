@@ -10,29 +10,21 @@ import (
 	"sync"
 )
 
-type Handle struct {
-	Method string
-	Func   func(w http.ResponseWriter, r *http.Request)
-	//todo: fazer uma função padrão de erro
-	FuncOnError func(w http.ResponseWriter, r *http.Request)
-	//todo: fazer uma função padrão de erro de segurança
-	FuncOnSecurityError func(w http.ResponseWriter, r *http.Request)
-	//todo: fazer uma funçaõ padrão de segurança
-	Security    func(w http.ResponseWriter, r *http.Request) (error, bool)
-	HeaderToAdd map[string]string
-}
-
 type Project struct {
-	ListenAndServer ListenAndServer `json:"listenAndServer"`
-	Sll             ssl             `json:"ssl"`
-	Handle          map[string]Handle
-	//Protocol          string          `json:"protocol"`
-	//Pygocentrus       pygocentrus     `json:"pygocentrus"`
-	Proxy             []proxy        `json:"proxy"`
-	Static            []static       `json:"static"`
-	DebugServerEnable bool           `json:"debugServerEnable"`
-	Listen            Listen         `json:"-"`
-	waitGroup         sync.WaitGroup `json:"-"`
+	Protocol    string      `yaml:"protocol"`
+	Pygocentrus pygocentrus `yaml:"pygocentrus"`
+
+	ListenAndServer     ListenAndServer `json:"listenAndServer"`
+	Sll                 ssl             `json:"ssl"`
+	Handle              map[string]Handle
+	FuncOnError         func(w http.ResponseWriter, r *http.Request)
+	FuncOnSecurityError func(w http.ResponseWriter, r *http.Request)
+	FuncPageNotFound    func(w http.ResponseWriter, r *http.Request)
+	Proxy               []proxy        `json:"proxy"`
+	Static              []static       `json:"static"`
+	DebugServerEnable   bool           `json:"debugServerEnable"`
+	Listen              Listen         `json:"-"`
+	waitGroup           sync.WaitGroup `json:"-"`
 }
 
 func (el *Project) WaitAddDelta() {
@@ -70,24 +62,45 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 			if handle.Func != nil {
 
 				if handle.Security != nil {
+
 					err, securityPass = handle.Security(w, r)
 					if err != nil {
-						//todo: melhor com função padrão
-						handle.FuncOnError(w, r)
-						return
+
+						if handle.FuncOnError != nil {
+
+							handle.FuncOnError(w, r)
+							return
+
+						} else if el.FuncOnError != nil {
+
+							el.FuncOnError(w, r)
+							return
+
+						}
 					}
+
 					if !securityPass {
-						//todo: melhor com função padrão
-						handle.FuncOnSecurityError(w, r)
-						return
+
+						if handle.FuncOnSecurityError != nil {
+
+							handle.FuncOnSecurityError(w, r)
+							return
+
+						} else if el.FuncOnSecurityError != nil {
+
+							el.FuncOnSecurityError(w, r)
+							return
+
+						}
 					}
 				}
 
 				for key, value := range handle.HeaderToAdd {
-					w.Header().Add(key, value)
+					w.Header().Add(key.String(), value.String())
 				}
 
 				handle.Func(w, r)
+				return
 			}
 
 		}
