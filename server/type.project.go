@@ -5,13 +5,27 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"reflect"
 	"regexp"
 	"sync"
 )
 
+type Handle struct {
+	Method string
+	Func   func(w http.ResponseWriter, r *http.Request)
+	//todo: fazer uma função padrão de erro
+	FuncOnError func(w http.ResponseWriter, r *http.Request)
+	//todo: fazer uma função padrão de erro de segurança
+	FuncOnSecurityError func(w http.ResponseWriter, r *http.Request)
+	//todo: fazer uma funçaõ padrão de segurança
+	Security    func(w http.ResponseWriter, r *http.Request) (error, bool)
+	HeaderToAdd map[string]string
+}
+
 type Project struct {
 	ListenAndServer ListenAndServer `json:"listenAndServer"`
 	Sll             ssl             `json:"ssl"`
+	Handle          map[string]Handle
 	//Protocol          string          `json:"protocol"`
 	//Pygocentrus       pygocentrus     `json:"pygocentrus"`
 	Proxy             []proxy        `json:"proxy"`
@@ -35,6 +49,7 @@ func (el *Project) Wait() {
 
 func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 	var err error
+	var securityPass bool
 	var host = r.Host
 	var remoteAddr string
 	var re *regexp.Regexp
@@ -45,6 +60,39 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 	//el.waitGroup.Add(1)
 
 	//defer el.waitGroup.Done()
+
+	if !reflect.DeepEqual(el.Handle[r.RequestURI], Handle{}) {
+
+		handle := el.Handle[r.RequestURI]
+
+		if handle.Method == r.Method || handle.Method == "" {
+
+			if handle.Func != nil {
+
+				if handle.Security != nil {
+					err, securityPass = handle.Security(w, r)
+					if err != nil {
+						//todo: melhor com função padrão
+						handle.FuncOnError(w, r)
+						return
+					}
+					if !securityPass {
+						//todo: melhor com função padrão
+						handle.FuncOnSecurityError(w, r)
+						return
+					}
+				}
+
+				for key, value := range handle.HeaderToAdd {
+					w.Header().Add(key, value)
+				}
+
+				handle.Func(w, r)
+			}
+
+		}
+
+	}
 
 	if el.Proxy != nil {
 
@@ -127,11 +175,11 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 							el.Proxy[proxyKey].Servers[serverKey].consecutiveErrors = 0
 							el.Proxy[proxyKey].Servers[serverKey].consecutiveSuccess += 1
 
-							if el.Pygocentrus.GetAttack() == true {
+							/*if el.Pygocentrus.GetAttack() == true {
 								el.Pygocentrus.ClearAttack()
 								//seelog.Critical("return after a pygocentrus attack")
 								return
-							}
+							}*/
 
 							//seelog.Critical("continue")
 							continue
