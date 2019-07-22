@@ -6,23 +6,22 @@ import (
 	"net/http"
 )
 
-func NewWebContainer() webContainer {
-	var ret = webContainer{}
+func NewWebContainer() WebContainer {
+	var ret = WebContainer{}
 	ret.out = jsonOut.NewJSonOut()
 
 	return ret
 }
 
-type webContainer struct {
+type WebContainer struct {
 	out jsonOut.Out
 }
 
-func (el *webContainer) Byte() []byte {
+func (el *WebContainer) Byte() []byte {
 	return el.out.Byte()
 }
 
-func (el *webContainer) ListAll(w http.ResponseWriter, r *http.Request) {
-	w.Header().Add("Content-Type", "application/json")
+func (el *WebContainer) ListAll(w http.ResponseWriter, r *http.Request) {
 
 	err, container := docker.NewContainer()
 	if err != nil {
