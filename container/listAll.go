@@ -23,7 +23,7 @@ func (el *WebContainer) Byte() []byte {
 
 func (el *WebContainer) ListAll(w http.ResponseWriter, r *http.Request) {
 
-	err, container := docker.NewContainer()
+	err, container := docker.NewContainerStt()
 	if err != nil {
 		el.out.Meta.AddError(err.Error())
 		_, _ = w.Write(el.out.Byte())
