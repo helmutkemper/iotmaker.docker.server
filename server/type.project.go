@@ -48,12 +48,14 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 	var hostServer string
 	var serverKey int
 	var loopCounter = 0
+	var pageNotFound = true
 
 	//el.waitGroup.Add(1)
 
 	//defer el.waitGroup.Done()
 
 	if !reflect.DeepEqual(el.Handle[r.RequestURI], Handle{}) {
+		pageNotFound = false
 
 		handle := el.Handle[r.RequestURI]
 
@@ -108,6 +110,7 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if el.Proxy != nil {
+		pageNotFound = false
 
 		for proxyKey, proxyData := range el.Proxy {
 
@@ -210,4 +213,13 @@ func (el *Project) HandleFunc(w http.ResponseWriter, r *http.Request) {
 			}
 		}
 	}
+
+	if pageNotFound == true && len(el.Handle) != 0 && el.Proxy == nil {
+
+		if el.FuncPageNotFound != nil {
+			el.FuncPageNotFound(w, r)
+		}
+
+	}
+
 }
